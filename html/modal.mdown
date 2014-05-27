@@ -1,0 +1,290 @@
+Modal Markup and Tutorial
+========================
+> ## So you want a modal?
+> 
+> This tutorial will require HTML, CSS, and a little bit of jquery(nothing too hard I promise!) I have written the code in HAML so if you prefer plain HTML, no prob, just copy my code into an online haml to html converter. (or you could be super cool among your friends and learn haml ;)Be aware it would help to know the very basics of foundation's grid system so you don't freak out when you start seeing ".row" and "small-6.columns." If you know how grids generally work in html and CSS, just know that foundation requires a ".row" class to start a new row of columns. If all that doesn't make sense, dont worry nothing of this tutorial actually affects the grid.
+
+The modal is one of the things every beginning developer has come to in order to spruce up their website. Make it look less like a static page and more dynamic.
+
+The first thing we need to do is understand exactly what we want our modal to do. In this instance, and you can change things to suit your needs of course, I want 5 things for my modal to do- 
+
+1. The modal to be INVISIBLE when I first load the page
+2. When I click a specific button, I want the modal to be VISIBLE.
+3. The modal to be a box and hold our input fields/login
+4. The modal needs to be in the foreground of the current page
+5. Behind that box the rest of our view should be greyed out but, still visible
+
+
+> Throughout this tutorial I'll inform you when something that breaks the way this works. I'll label these as 
+>
+> ###WARNING
+
+-----------------------
+I've made a mock up of a simple website using the middleman static site generator and the foundation template. If this looks confusing, don't worry. You can replace all of this code with what you already have for your site.
+
+![Initial Mockup](/initial_mockup.pngg "Initial Mockup")
+
+> If you don't like haml, just use a html to haml converter online.
+               
+    .top-bar
+    	%ul.title-area
+    		%li.name
+    			%h1
+    				%a Modal Example
+    
+    
+    = image_tag('top_banner_triangles.jpg')
+    .row
+    	.medium-4.columns
+    		%h3 Header 1
+    		%p Artisan readymade biodiesel, next level dreamcatcher   scenester vegan. Ennui mlkshk cray, flexitarian mumblecore cliche freegan. Intelligentsia Pitchfork tattooed photo booth whatever pork belly. Blog selvage sustainable bicycle rights stumptown.
+    
+    	.medium-4.columns
+    		%h3 Header 2
+    		%p Godard Neutra aute, voluptate retro selfies squid ut Tonx flannel cliche. Kickstarter photo booth assumenda, meggings actually selvage slow-carb sapiente banh mi irure sustainable. Actually High Life laboris disrupt irure vero. Consectetur incididunt occaecat Wes Anderson. 
+    		
+    	.medium-4.columns
+    		%h3 Header 3
+    		%p Odd Future deep v letterpress VHS, occupy cardigan art party fashion axe slow-carb ugh. Kickstarter post-ironic narwhal ennui photo booth normcore, street art Pinterest High Life asymmetrical occupy actually food truck. 
+    .row
+    	.small-5.small-centered.columns
+    		.button.expand I want to see the modal
+    = image_tag('bottom_banner_triangles.jpg')
+    .row
+    	.medium-6.columns
+    		%h3 More stuff down here
+    		%p Post-ironic paleo sriracha readymade leggings, VHS fixie ethnic polaroid roof party master cleanse street art fashion axe Marfa. Dreamcatcher Intelligentsia chillwave, crucifix Etsy food truck next level. Ennui Intelligentsia flannel next level Kickstarter chillwave. Meggings keytar sartorial fixie vegan. Skateboard messenger bag wayfarers PBR&B church-key, Carles chambray jean shorts YOLO 90's photo booth artisan small batch sustainable. Pitchfork fanny pack gastropub Etsy Tonx. Banjo locavore twee keffiyeh ugh, direct trade Etsy trust fund lomo vinyl Truffaut DIY.
+    	.medium-3.columns
+    		%h3 Extra bits
+    		%p American Apparel single-origin coffee selfies pop-up, tousled Helvetica actually.
+    		.button link
+    	.medium-3.columns
+    		%h3 Other Extras
+    		%p American Apparel single-origin coffee selfies pop-up, tousled Helvetica actually.
+    		.button link
+
+-----------------------
+
+creating the overlay
+----------------------
+The first thing we need to do is create the greyed out layer that the modal sits on top of. We'll add an overlay div on our page that sits on top later on.
+                
+    .overlay
+    .top-bar
+    	%ul.title-area
+    		%li.name
+    			%h1
+    				%a Modal Example
+    				... 
+
+
+And then we'll give it some styling in our CSS page
+                
+    .overlay {
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color:rgba(0, 0, 0, 0.55);
+        z-index: 10;       
+    }
+![overlay working](/overlay_working.png "overlay working")
+
+Theres a couple things going on here. top,left,width, and height are all fairly straightforward and makes sure the overlay covers the whole page. 
+
+###WARNING
+The thing I really want to pay attention to is the position value. If we dont specify this, your browser gives the element's position a "static" value.
+
+![overlay not working](/overlay_not_working.png "overlay not working")
+Which covers the page in our view
+
+###WARNING
+The other thing I want to point out is the z-index. The higher the value- the more in the foreground the element is in relation to the others on the page. Of course, we'll use a higher value for the modal.
+
+
+
+
+---------------------------
+
+creating the modal
+---------------------------
+
+
+
+I find it's easier to first create my modal as simply as possible so we're not gonna worry about layers or anything fancy like that so let's comment out our overlay div
+    
+    / .overlay
+    
+And place our modal on top of the page where we can work on it without it messing with other elements.
+
+    .small-11.medium-9.large-6.small-centered.columns
+    	.modal
+    		.row
+    			%form
+    				.row
+    					.small-11.columns
+    					.small-1.columns
+    						%a.close-reveal-modal ×
+    				.row
+    					.small-9.small-centered.columns
+    						%input{ type: "text"}
+    						%br
+    				.row
+    					.small-9.small-centered.columns
+    						%input{ type: "text"}
+    						%br
+    				.row
+    					.small-6.small-centered.columns
+    						.button.success.expand Commit
+    
+    / .overlay						
+    
+    .top-bar
+    	%ul.title-area
+    		%li.name
+    			%h1
+    				%a Modal Example
+    ....
+    
+And give it some styling-
+    
+    .modal {
+      position: relative;
+      width: 100%;
+      border-radius:3px;
+      background-color:rgba(238, 238, 248, 0.9);
+      padding:8px;
+      z-index: 15;
+    }
+
+We can see- the modal is nothing more than a div on the HTML page and then a box in the CSS. We create the div, give it a boundary(in my case I used the edges of the columns in foundation but, you can just as easily(but maybe not as responsive) use fixed pixel heights and widths for your modal box.)
+
+![overlay not working](/overlay_not_working.png "overlay not working")
+We now have the modal sitting on top of our website, and it's looking pretty great.
+
+--------------------
+For kicks, lets try uncommenting the overlay div and see what the page looks like.
+
+![overlay uncommented](/overlay_uncommented.png "overlay_uncommited.png")
+
+So, the overlay still works and the modal sits on top of it. Great! Now, we just need to get the modal to come down and display ontop of our page.
+
+------------------
+
+adding the two together
+------------------
+
+Now we want to combine the two so that our box isnt floating ontop of our screen. We simply make the modal a child element of the overlay class.
+
+    .overlay		
+    	.small-11.medium-9.large-6.small-centered.columns
+    		.modal
+    			.row
+    				%form
+    					.row
+    						.small-11.columns
+    						.small-1.columns
+    							%a.close-reveal-modal ×
+    					.row
+    						.small-9.small-centered.columns
+    							%input{ type: "text"}
+    							%br
+    					.row
+    						.small-9.small-centered.columns
+    							%input{ type: "text"}
+    							%br
+    					.row
+    						.small-6.small-centered.columns
+    							.button.success.expand Commit
+![modal_on_page_hanging](/modal_on_page_hanging.png "modal_on_page_hanging.png")
+    
+###WARNING
+Make sure that you put the model as a child element inside the overlay. This way we only have to hide and show one element in javascript. We'll go over that in a bit.
+
+Our page is looking great but, the modal is kind of just hanging off the top of the view. To fix that we ca nincrease the margin-top style in our css.
+
+    .modal {
+        margin-top: 15%;
+        ...
+![modal_on_page_hanging](/modal_on_page_hanging.png "modal_on_page_hanging.png")
+
+Our Styling is done! Hurray!
+
+
+###WARNING
+make sure you set this to the ".overlay" div and not the "modal". Setting the display none to the modal only hides the box but, the greyed out overlay is still visible. Remember that the two are parent-child. setting a value to the parent brings the same value to the child. but, the child in this case doesn't affect the parent.
+
+------------------------
+
+why opacity isn't being used
+------------------------
+###WARNING
+The parent child reletaionship is also why we didn't use the "opacity" setting in our CSS. If we change the overlay background color to white and then set the opacity to .75. Opacity can only be a value between 0.0 and 1.0(or numeric percentage values)
+
+Also change the color of the modal to grey for better visibility
+
+    .modal {
+    background-color: grey;
+    ...
+    
+    }
+    .overlay {
+        backgound-color: white;
+        opacity: .75;
+        ...
+
+![overlay_opacity_75](/overlay_opacity_75.png "overlay_opacity_75.png")
+
+It works roughly as expectd. The page is greyed out but, so is the modal. So let's see if changing the opacity of the modal to 1.0 does what we want
+
+![modal_opacity_1.png](/modal_opacity_1.png "modal_opacity_1.png")
+Nothing. Why is that? The reason is that we are dealing with RELATIVE opacity values passed between parent and child elements. So while we're setting the opacity to 1.0 in the modal/child element, thats still only going to be 100% of the parent value. Which in this case is .75. This is further exemplified by setting the modal opacity to .5
+    
+    .modal {
+        opacity: .5;
+        ...
+        
+![modal_opacity_05.png](/modal_opacity_05.png "modal_opacity_05.png")
+
+By setting our background colors to RGB and then setting a transparent alpha value- we achieve our goal in an explicit fashion.
+
+
+
+------------------------
+
+adding javascript to open and close
+-----------------------
+
+Our modal looks great but, we still have a few issues. Nothing happens when I click any buttons and the modal is visible on page load. The latter is easy to fix. In our CSS file, let's set the display property of the overlay div to "display: none"
+
+    .overlay {
+        display: none;
+        ...
+        
+Now we just have to make it show up when we click the big blue "I want to see the modal" button. For that, we need a little bit of javascript magic. Real simple- just add an event listener to your document. go all the way to the bottom of your document while still being in the body tag and add:
+
+    :javascript
+    	$('#blue-button').on('click', function() {
+    		$('.overlay').fadeIn('fast');
+    	});
+
+Becuase the jquery is looking for a div with the id of "blue-button" make sure to add that onto your button. In my case it looks like this from the mocked up index.html file
+
+    ...
+    %p Odd Future deep v letterpress VHS, occupy cardigan art party fashion axe slow-carb ugh. Kickstarter post-ironic narwhal ennui photo booth normcore, street art Pinterest High Life asymmetrical occupy actually food truck. 
+    .row
+    	.small-5.small-centered.columns
+    		.button.expand#blue-button I want to see the modal
+    = image_tag('bottom_banner_triangles.jpg')
+    .row
+    	.medium-6.columns
+    		%h3 More stuff down here
+    ...
+    
+We did it! If you have the jquery gem installed or just have the jquery file required right, you should see your modal pop up. Getting it to go away is as simple as taking that same code and mixing and matching the divs.
+
+Thanks for reading.
+
+Till next time
+
