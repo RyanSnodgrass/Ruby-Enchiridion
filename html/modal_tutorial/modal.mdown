@@ -22,7 +22,7 @@ The first thing we need to do is understand exactly what we want our modal to do
 -----------------------
 I've made a mock up of a simple website using the middleman static site generator and the foundation template. If this looks confusing, don't worry. You can replace all of this code with what you already have for your site.
 
-![Initial Mockup](/initial_mockup.pngg "Initial Mockup")
+![Initial Mockup](/initial_mockup.png "Initial Mockup")
 
 > If you don't like haml, just use a html to haml converter online.
                
